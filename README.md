@@ -15,6 +15,16 @@ A recommender has to guess what each user thinks, and then shows them content an
 
 Our question is a general version of that: can the more active group on a platform end up shaping the opinions of a quieter group, through a recommender that never looks at group membership? Gender is our application. In the NYT comment section, women are 44% of readers but write only about 25% of the comments (Pierson 2015), so a platform simply sees much less of them.
 
+# Model
+
+config.BASELINE            the dict of parameter names and defaults (copy it as-is)
+make_population(...)   ->  {"group": (N,), "theta": (N,), "a": (N,)}
+platform object            observe(x, active, rng); matching_opinions(x) -> array or None;
+                           estimates() -> array or None
+simulate(...)          ->  {"times", "x" (R,N), "x_hat" (R,N) or None, "a", "n_active"}
+summarize(result)      ->  dict of metric name -> array over time
+
+
 ## References
 
 Baumann, F., Lorenz-Spreen, P., Sokolov, I. M., & Starnini, M. (2020). Modeling echo chambers and polarization dynamics in social networks. Physical Review Letters, 124(4), 048301. https://doi.org/10.1103/PhysRevLett.124.048301
