@@ -64,6 +64,30 @@ def test_kappa_one_puts_target_group_on_x_target():
     assert np.allclose(match[~women], p.estimates()[~women])  # men not steered
 
 
+def test_window_forgets_old_observations():
+    """window=2: each step old observations keep weight 1 - 1/2 = 0.5.
+
+    Agent 0 is seen at opinion a, then (one step later) at opinion b.
+    Without memory loss its average is (a + b) / 2. With window=2 the old
+    observation counts half, so the average is (0.5*a + b) / 1.5,
+    i.e. closer to the recent opinion b.
+    """
+    rng = np.random.default_rng(0)
+    a, b = -0.6, 0.6
+    x1, x2 = X.copy(), X.copy()
+    x1[0], x2[0] = a, b
+
+    forget = PredictiveRecommender(GROUP, lam=0, noise_sd=0, window=2)
+    keep = PredictiveRecommender(GROUP, lam=0, noise_sd=0, window=None)
+    for p in (forget, keep):
+        p.observe(x1, mask(0), rng)
+        p.observe(x2, mask(0), rng)
+
+    assert np.isclose(keep.estimates()[0], (a + b) / 2)
+    assert np.isclose(forget.estimates()[0], (0.5 * a + b) / 1.5)
+    assert np.isclose(forget.n[0], 1.5)   # observation count stays bounded
+
+
 def test_make_platform_builds_each_kind():
     params = {"lam": 5.0, "noise_sd": 0.1, "window": None,
               "steer_group": None, "kappa": 0.0, "x_target": 0.0}
