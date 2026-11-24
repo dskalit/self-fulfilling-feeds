@@ -25,6 +25,10 @@ def describe(final):
 
 
 def part_a():
+    """
+    Baumann's regime (same as check 1)
+    but with s = 0, 0.5, 1, 2
+    """
     print("Part A: Baumann's regimes with the anchor term")
     fig, axes = plt.subplots(len(S_VALUES), 3, figsize=(13, 2.6 * len(S_VALUES)),
                              sharex=True)
@@ -51,6 +55,9 @@ def part_a():
 
 
 def part_b():
+    """
+    Sweep alpha and beta at s = whatever is specified in config.py to find baseline
+    """
     s = BASELINE["s"]
     print(f"Part B: alpha x beta grid at s = {s} (K = {BASELINE['K']})")
     for alpha in [0.5, 1.0, 2.0, 3.0]:
