@@ -1,13 +1,9 @@
 """Default parameters for every run, kept in one place.
 
 Checks and experiments start from BASELINE and only override what they
-change, e.g. run({"rho": 3.0}). If you change a default here, every
-script picks it up, so tell the group when you do.
+change, e.g. run({"rho": 3.0}). 
 
-Status: K, alpha, beta, s, Delta and sigma are PROVISIONAL. Right now
-they are Baumann's polarization setting (alpha = 3, beta = 3) with s = 1.
-Check 2 shows this still polarizes with the anchor, but opinions still
-run out to about +-15. Agree on a baseline as a group, then update here.
+Updating params based on check 2
 """
 
 BASELINE = {
@@ -18,7 +14,7 @@ BASELINE = {
     "record_every": 10,  # store opinions every 10 steps (= every 0.1 time units)
 
     # --- Opinion dynamics (Baumann et al. 2020) -----------------------
-    "K": 3.0,           # strength of social influence
+    "K": 1.5,           # strength of social influence
     "alpha": 3.0,       # controversialness: how quickly influence saturates
     "beta": 3.0,        # homophily: how strongly matching favours similar opinions
     "r": 0.5,           # chance a contact also influences the active agent back
