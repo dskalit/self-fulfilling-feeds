@@ -17,12 +17,15 @@ REGIMES = {
 S_VALUES = [0.0, 0.5, 1.0, 2.0]
 
 
-def describe(final):
+def describe(final, start):
     """One line per run: mean opinion, share on the positive side,
-    extremity (mean |x|) and the most extreme agent."""
+    extremity (mean |x|), the most extreme agent, and how many agents sit
+    near zero now vs at the start (fewer now = a gap has opened)."""
+    near0_now = (np.abs(final) < 0.2).mean()
+    near0_start = (np.abs(start) < 0.2).mean()
     return (f"|mean| {abs(final.mean()):5.2f}  share+ {share_positive(final):.2f}  "
-            f"mean|x| {extremity(final):5.2f}  max|x| {np.abs(final).max():5.1f}")
-
+            f"mean|x| {extremity(final):5.2f}  max|x| {np.abs(final).max():5.1f}  "
+            f"near0 {near0_now:.2f} (start {near0_start:.2f})")
 
 def part_a():
     """
@@ -44,7 +47,7 @@ def part_a():
                 ax.set_title(name, fontsize=10)
             if col == 0:
                 ax.set_ylabel(f"s = {s}")
-            print(f"  s={s:<4} {name:28s} {describe(final)}")
+            print(f"  s={s:<4} {name:28s} {describe(final, x[0])}")
     for ax in axes[-1]:
         ax.set_xlabel("t")
     fig.tight_layout()
@@ -64,18 +67,19 @@ def part_b():
         for beta in [0.0, 1.0, 3.0]:
             res = simulate(K=BASELINE["K"], r=BASELINE["r"], s=s,
                            alpha=alpha, beta=beta, seed=1)
-            print(f"  alpha={alpha:<4} beta={beta:<4} {describe(res['x'][-1])}")
+            print(f"  alpha={alpha:<4} beta={beta:<4} {describe(res['x'][-1], res['x'][0])}")
 
 def part_c():
-    """Sweep K, alpha and s at beta = 3 (polarization-like homophily)."""
     print("Part C: K x alpha x s at beta = 3")
-    for K in [0.5, 1.0, 2.0, 3.0]:
+    for K in [0.5, 1.0, 1.5, 2.0, 3.0]:
         for alpha in [0.5, 1.0, 3.0]:
             for s in [1.0, 2.0, 4.0]:
-                res = simulate(K=K, r=BASELINE["r"], s=s,
-                               alpha=alpha, beta=3, seed=1)
-                print(f"  K={K:<4} alpha={alpha:<4} s={s:<4} {describe(res['x'][-1])}")
-
+                res = simulate(K=K, r=BASELINE["r"], s=s, alpha=alpha,
+                               beta=3.0, seed=1)
+                print(f"  K={K:<4} alpha={alpha:<4} s={s:<4} "
+                      f"{describe(res['x'][-1], res['x'][0])}")
+    print()
+    
 if __name__ == "__main__":
     part_a()
     part_b()
